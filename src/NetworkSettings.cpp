@@ -181,7 +181,7 @@ void NetworkSettingsClass::enableAdminMode()
 
 String NetworkSettingsClass::getApName() const
 {
-    return String(ACCESS_POINT_NAME + String(Utils::getChipId()));
+    return String(ACCESS_POINT_NAME);
 }
 
 void NetworkSettingsClass::loop()

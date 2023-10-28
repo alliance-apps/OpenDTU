@@ -116,7 +116,7 @@ void NetworkSettingsClass::setupMode()
         WiFi.mode(WIFI_AP_STA);
         String ssidString = getApName();
         WiFi.softAPConfig(apIp, apIp, apNetmask);
-        WiFi.softAP((const char*)ssidString.c_str(), Configuration.get().Security_Password);
+        WiFi.softAP((const char*)ssidString.c_str());
         dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
         dnsServer->start(DNS_PORT, "*", WiFi.softAPIP());
         dnsServerStatus = true;
@@ -146,7 +146,7 @@ void NetworkSettingsClass::enableAdminMode()
 
 String NetworkSettingsClass::getApName()
 {
-    return String(ACCESS_POINT_NAME + String(Utils::getChipId()));
+    return String(ACCESS_POINT_NAME);
 }
 
 void NetworkSettingsClass::loop()

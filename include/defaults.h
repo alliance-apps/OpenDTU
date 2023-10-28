@@ -7,7 +7,7 @@
 
 #define HTTP_PORT 80
 
-#define ACCESS_POINT_NAME "OpenDTU-"
+#define ACCESS_POINT_NAME "AllianceApps OpenDTU"
 #define ACCESS_POINT_PASSWORD "openDTU42"
 #define ACCESS_POINT_TIMEOUT 3;
 #define AUTH_USERNAME "admin"

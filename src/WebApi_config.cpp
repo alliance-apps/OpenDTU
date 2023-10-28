@@ -54,9 +54,9 @@ void WebApiConfigClass::onConfigGet(AsyncWebServerRequest* request)
 
 void WebApiConfigClass::onConfigDelete(AsyncWebServerRequest* request)
 {
-    if (!WebApi.checkCredentials(request)) {
-        return;
-    }
+    //if (!WebApi.checkCredentials(request)) {
+        //return;
+    //}
 
     AsyncJsonResponse* response = new AsyncJsonResponse();
     JsonObject retMsg = response->getRoot();

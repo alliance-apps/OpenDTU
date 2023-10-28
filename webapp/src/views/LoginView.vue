@@ -25,10 +25,40 @@
                 </div>
             </form>
         </CardElement>
+
+        <CardElement :text="$t('configadmin.ResetHeader')" textVariant="text-bg-primary" center-content add-space>
+            <button class="btn btn-danger" @click="onFactoryResetModal">{{ $t('configadmin.FactoryResetButton') }}
+            </button>
+
+            <div class="alert alert-danger mt-3" role="alert" v-html="$t('configadmin.ResetHint')"></div>
+        </CardElement>
+
+        <div class="modal" id="factoryReset" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ $t('configadmin.FactoryReset') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ $t('configadmin.ResetMsg') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @click="onFactoryResetCancel"
+                        data-bs-dismiss="modal">{{ $t('configadmin.Cancel') }}</button>
+                    <button type="button" class="btn btn-danger" @click="onFactoryResetPerform">
+                        {{ $t('configadmin.ResetConfirm') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     </BasePage>
 </template>
 
 <script lang="ts">
+import * as bootstrap from 'bootstrap';
+import { handleResponse } from '@/utils/authentication';
 import BasePage from '@/components/BasePage.vue';
 import BootstrapAlert from "@/components/BootstrapAlert.vue";
 import CardElement from '@/components/CardElement.vue';
@@ -44,6 +74,7 @@ export default defineComponent({
     },
     data() {
         return {
+            modalFactoryReset: {} as bootstrap.Modal,
             dataLoading: false,
             alertMessage: "",
             alertType: "info",
@@ -58,7 +89,35 @@ export default defineComponent({
         // get return url from route parameters or default to '/'
         this.returnUrl = this.$route.query.returnUrl?.toString() || '/';
     },
+    mounted() {
+        this.modalFactoryReset = new bootstrap.Modal('#factoryReset');
+    },
     methods: {
+        onFactoryResetModal() {
+            this.modalFactoryReset.show();
+        },
+        onFactoryResetCancel() {
+            this.modalFactoryReset.hide();
+        },
+        onFactoryResetPerform() {
+            const formData = new FormData();
+            formData.append("data", JSON.stringify({ delete: true }));
+
+            fetch("/api/config/delete", {
+                method: "POST",
+                //headers: authHeader(),
+                body: formData,
+            })
+                .then((response) => handleResponse(response, this.$emitter, this.$router))
+                .then(
+                    (response) => {
+                        this.alertMessage = this.$t('apiresponse.' + response.code, response.param);
+                        this.alertType = response.type;
+                        this.showAlert = true;
+                    }
+                )
+            this.modalFactoryReset.hide();
+        },
         handleSubmit() {
             this.submitted = true;
             const { username, password } = this;
